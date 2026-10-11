@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://i76557heltvt"]
+
+[ext_resource type="Texture2D" uid="uid://dpkgy4yljy3ah" path="res://sprites/Basic Humanoid Animations/halfling assassin/HalflingAssassin.png" id="1_merdl"]
+
+[sub_resource type="GDScript" id="GDScript_u1vf7"]
+script/source = "extends CharacterBody2D
+
+const SPEED = 50.0
+
+enum State {
+	IDLE,
+	WALK
+}
+
+var current_state: State = State.IDLE
+
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+
+func _physics_process(_delta: float) -> void:
+	var direction := Input.get_vector(
+		\"ui_left\",
+		\"ui_right\",
+		\"ui_up\",
+		\"ui_down\", 0.2
+	).normalized()
+	
+	if direction.length() < 0.25:
+		direction = Vector2.ZERO
+	
+	velocity = direction * SPEED
+
+	if direction == Vector2.ZERO:
+		change_state(State.IDLE)
+	else:
+		change_state(State.WALK)
+
+		if direction.x < 0:
+			animated_sprite.flip_h = true
+		elif direction.x > 0:
+			animated_sprite.flip_h = false
+
+	move_and_slide()
+
+
+func change_state(new_state: State) -> void:
+	if current_state == new_state:
+		return
+
+	current_state = new_state
+
+	match current_state:
+		State.IDLE:
+			animated_sprite.play(\"idle\")
+
+		State.WALK:
+			animated_sprite.play(\"idle\")
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0kkn"]
+atlas = ExtResource("1_merdl")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4p34"]
+atlas = ExtResource("1_merdl")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfe5m"]
+atlas = ExtResource("1_merdl")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qly61"]
+atlas = ExtResource("1_merdl")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ve0sw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b0kkn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4p34")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rfe5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qly61")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ikrs5"]
+
+[node name="Player" type="CharacterBody2D" unique_id=2129055633]
+script = SubResource("GDScript_u1vf7")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=233753887]
+sprite_frames = SubResource("SpriteFrames_ve0sw")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=871406386]
+shape = SubResource("RectangleShape2D_ikrs5")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=292637242]
+zoom = Vector2(5, 5)
+limit_left = 0
+limit_top = 0
+limit_right = 800
+limit_bottom = 800
