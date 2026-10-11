@@ -3,9 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://dpkgy4yljy3ah" path="res://sprites/Basic Humanoid Animations/halfling assassin/HalflingAssassin.png" id="1_merdl"]
 
 [sub_resource type="GDScript" id="GDScript_u1vf7"]
-script/source = "extends CharacterBody2D
+script/source = "
+extends CharacterBody2D
 
-const SPEED = 50.0
+const SPEED = 100.0
+const DEADZONE = 0.25
 
 enum State {
 	IDLE,
@@ -18,16 +20,35 @@ var current_state: State = State.IDLE
 
 
 func _physics_process(_delta: float) -> void:
-	var direction := Input.get_vector(
-		\"ui_left\",
-		\"ui_right\",
-		\"ui_up\",
-		\"ui_down\", 0.2
+	# Teclado: WASD e setas
+	var keyboard_direction := Vector2(
+		float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) -
+		float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT)),
+		float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) -
+		float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP))
 	).normalized()
-	
-	if direction.length() < 0.25:
-		direction = Vector2.ZERO
-	
+
+	# Controle: primeiro dispositivo conectado
+	var controller_direction := Vector2.ZERO
+	var joypads := Input.get_connected_joypads()
+
+	if not joypads.is_empty():
+		var joy_id: int = joypads[0]
+
+		var joy_x := Input.get_joy_axis(joy_id, JOY_AXIS_LEFT_X)
+		var joy_y := Input.get_joy_axis(joy_id, JOY_AXIS_LEFT_Y)
+
+		controller_direction = Vector2(joy_x, joy_y)
+
+		# Filtra o drift do analógico
+		if controller_direction.length() < DEADZONE:
+			controller_direction = Vector2.ZERO
+		else:
+			controller_direction = controller_direction.normalized()
+
+	# Combina as entradas sem sobrescrever o teclado
+	var direction := (keyboard_direction + controller_direction).limit_length(1.0)
+
 	velocity = direction * SPEED
 
 	if direction == Vector2.ZERO:
@@ -52,7 +73,6 @@ func change_state(new_state: State) -> void:
 	match current_state:
 		State.IDLE:
 			animated_sprite.play(\"idle\")
-
 		State.WALK:
 			animated_sprite.play(\"idle\")
 "
