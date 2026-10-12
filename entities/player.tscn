@@ -69,7 +69,7 @@ rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_6nm46")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=292637242]
-zoom = Vector2(5, 5)
+zoom = Vector2(7, 7)
 limit_left = 0
 limit_top = 0
 limit_right = 800
