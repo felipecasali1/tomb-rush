@@ -5,6 +5,8 @@ const ZONE_CHANGE_INTERVAL := 15.0
 const ZONE_RADIUS := 54.0
 const MAX_SCARABS := 100
 const SCARAB_SCENE: PackedScene = preload("res://entities/scarab.tscn")
+const GIANT_SCARAB_SCENE: PackedScene = preload("res://entities/GiantScarab.tscn")
+const GIANT_SCARAB_CHANCE := 0.18
 
 var zone_positions: Array[Vector2] = [
 	Vector2(144, 144),
@@ -44,8 +46,8 @@ func _ready() -> void:
 	player.died.connect(_on_player_died)
 	_on_player_health_changed(player.health, player.max_health)
 
-	for _i in range(6):
-		_spawn_scarab()
+	for index in range(6):
+		_spawn_scarab(index == 0)
 
 
 func _process(delta: float) -> void:
@@ -84,8 +86,9 @@ func _choose_next_zone() -> void:
 	zone_visual.set_zone(zone_positions[active_zone_index])
 
 
-func _spawn_scarab() -> void:
-	var scarab: Scarab = SCARAB_SCENE.instantiate() as Scarab
+func _spawn_scarab(force_giant: bool = false) -> void:
+	var scarab_scene: PackedScene = GIANT_SCARAB_SCENE if force_giant or randf() < GIANT_SCARAB_CHANCE else SCARAB_SCENE
+	var scarab: Scarab = scarab_scene.instantiate() as Scarab
 	scarab.add_to_group("scarabs")
 	scarab.target = player
 	scarab.position = _get_scarab_spawn_position()

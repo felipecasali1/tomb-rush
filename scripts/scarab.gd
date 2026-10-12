@@ -9,6 +9,11 @@ const DAMAGE := 8
 const AVOIDANCE_TIME := 0.45
 const STUCK_TIME := 0.3
 
+@export var speed_min: float = SPEED_MIN
+@export var speed_max: float = SPEED_MAX
+@export var attack_distance: float = ATTACK_DISTANCE
+@export var damage: int = DAMAGE
+
 var target: Node2D
 var speed := 30.0
 var attack_timer := 0.0
@@ -21,7 +26,7 @@ var previous_position := Vector2.ZERO
 
 
 func _ready() -> void:
-	speed = randf_range(SPEED_MIN, SPEED_MAX)
+	speed = randf_range(speed_min, speed_max)
 	animated_sprite.play("walking")
 	previous_position = global_position
 
@@ -45,9 +50,9 @@ func _physics_process(delta: float) -> void:
 	if direction.x != 0.0:
 		animated_sprite.flip_h = direction.x < 0.0
 
-	if global_position.distance_to(target.global_position) <= ATTACK_DISTANCE and attack_timer <= 0.0:
+	if global_position.distance_to(target.global_position) <= attack_distance and attack_timer <= 0.0:
 		if target.has_method("take_damage"):
-			target.take_damage(DAMAGE)
+			target.take_damage(damage)
 		attack_timer = ATTACK_COOLDOWN
 
 

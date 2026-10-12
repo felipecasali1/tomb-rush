@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://dwnj6ik0drjy7"]
+
+[ext_resource type="Texture2D" uid="uid://b1gmb721r4k02" path="res://sprites/Basic Undead Animations/Giant Royal Scarab/GiantRoyalScarab.png" id="1_luhc4"]
+[ext_resource type="Script" uid="uid://cnopkfqjr1s6w" path="res://scripts/scarab.gd" id="2_scarab"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ka507"]
+atlas = ExtResource("1_luhc4")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xja7u"]
+atlas = ExtResource("1_luhc4")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2mw00"]
+atlas = ExtResource("1_luhc4")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jx2oa"]
+atlas = ExtResource("1_luhc4")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ikrs5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ka507")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xja7u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2mw00")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jx2oa")
+}],
+"loop": 1,
+"name": &"walking",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ikrs5"]
+radius = 5.0
+height = 16.296295
+
+[node name="GiantScarab" type="CharacterBody2D" unique_id=630295986]
+z_index = 2
+scale = Vector2(1.35, 1.35)
+collision_layer = 2
+script = ExtResource("2_scarab")
+speed_min = 34.0
+speed_max = 50.0
+attack_distance = 16.0
+damage = 16
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1796007012]
+position = Vector2(0, -2.9629629)
+sprite_frames = SubResource("SpriteFrames_ikrs5")
+animation = &"walking"
+autoplay = "walking"
+frame = 3
+frame_progress = 0.012015257
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1801215991]
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_ikrs5")
