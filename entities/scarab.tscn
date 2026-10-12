@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://d2kmvf1wtcwqf"]
+
+[ext_resource type="Script" uid="uid://cnopkfqjr1s6w" path="res://scripts/scarab.gd" id="1_scarab"]
+[ext_resource type="Texture2D" uid="uid://cddonvejya4jr" path="res://sprites/Basic Undead Animations/Royal Scarab/RoyalScarab.png" id="2_scarab"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scarab_1"]
+atlas = ExtResource("2_scarab")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scarab_2"]
+atlas = ExtResource("2_scarab")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scarab_3"]
+atlas = ExtResource("2_scarab")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scarab_4"]
+atlas = ExtResource("2_scarab")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_scarab"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scarab_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scarab_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scarab_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scarab_4")
+}],
+"loop": 1,
+"name": &"walking",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ext7o"]
+radius = 4.0
+height = 16.0
+
+[node name="Scarab" type="CharacterBody2D" unique_id=1281224450]
+z_index = 2
+collision_layer = 2
+script = ExtResource("1_scarab")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1485128316]
+position = Vector2(0, -3)
+sprite_frames = SubResource("SpriteFrames_scarab")
+animation = &"walking"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1607463932]
+position = Vector2(0, 1)
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_ext7o")

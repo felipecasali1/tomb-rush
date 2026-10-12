@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://5uhccyv50qoa"]
 
+[ext_resource type="Script" uid="uid://g1k3c76cd8yb" path="res://scripts/game.gd" id="1_atgyb"]
 [ext_resource type="Texture2D" uid="uid://jdxnodvpms7n" path="res://sprites/Desert_Dungeon_Pack/Tileset_Dungeon.png" id="1_ekubr"]
 [ext_resource type="Texture2D" uid="uid://wldi5ur55p85" path="res://sprites/Desert_Dungeon_Pack/Fire.png" id="2_tfnl5"]
 [ext_resource type="PackedScene" uid="uid://i76557heltvt" path="res://entities/player.tscn" id="2_u1vf7"]
@@ -396,6 +397,7 @@ fill = 1
 fill_from = Vector2(0.49130434, 0.50869566)
 
 [node name="Mapa" type="Node2D" unique_id=1272498082]
+script = ExtResource("1_atgyb")
 
 [node name="Tiles" type="Node2D" parent="." unique_id=1529084859]
 
@@ -418,6 +420,7 @@ tile_map_data = PackedByteArray("AAAeABcAAAAAAAAAAAAeABoAAAAAAAAAAAATABoAAAAAAAA
 tile_set = SubResource("TileSet_u1vf7")
 
 [node name="Player" parent="." unique_id=2129055633 instance=ExtResource("2_u1vf7")]
+z_index = 0
 position = Vector2(400, 400)
 
 [node name="Luzes" type="Node" parent="." unique_id=1834631531]
@@ -462,8 +465,8 @@ position = Vector2(312, 387)
 scale = Vector2(2, 2)
 texture = SubResource("GradientTexture2D_ikrs5")
 
-[node name="PointLight2D9" type="PointLight2D" parent="Luzes" unique_id=1781476877]
-position = Vector2(400, 401)
+[node name="PointLight2D9" type="PointLight2D" parent="Luzes" unique_id=92206067]
+position = Vector2(312, 387)
 scale = Vector2(2, 2)
 texture = SubResource("GradientTexture2D_ikrs5")
 
