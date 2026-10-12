@@ -195,7 +195,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6nm46"]
-radius = 4.0
+radius = 6.0
 height = 12.0
 
 [node name="Player" type="CharacterBody2D" unique_id=2129055633]
@@ -204,13 +204,14 @@ y_sort_enabled = true
 script = ExtResource("1_b0kkn")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=233753887]
+position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_ve0sw")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=871406386]
-position = Vector2(0, 4)
-rotation = -1.5707964
+position = Vector2(0, -6)
+rotation = -3.1415927
 shape = SubResource("CapsuleShape2D_6nm46")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=292637242]

@@ -54,7 +54,7 @@ attack_distance = 16.0
 damage = 16
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1796007012]
-position = Vector2(0, -2.9629629)
+position = Vector2(0, -8.148148)
 sprite_frames = SubResource("SpriteFrames_ikrs5")
 animation = &"walking"
 autoplay = "walking"
@@ -62,5 +62,6 @@ frame = 3
 frame_progress = 0.012015257
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1801215991]
+position = Vector2(0, -5.185185)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_ikrs5")
