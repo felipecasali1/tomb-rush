@@ -1,7 +1,7 @@
 extends Node2D
 
 const HOLD_TARGET := 60.0
-const ZONE_CHANGE_INTERVAL := 15.0
+const ZONE_CHANGE_INTERVAL := 30.0
 const ZONE_RADIUS := 54.0
 const MAX_SCARABS := 100
 const SCARAB_SCENE: PackedScene = preload("res://entities/scarab.tscn")

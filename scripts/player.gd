@@ -60,11 +60,7 @@ func _physics_process(_delta: float) -> void:
 		change_state(State.IDLE)
 	else:
 		change_state(State.WALK)
-
-		if direction.x < 0:
-			animated_sprite.flip_h = true
-		elif direction.x > 0:
-			animated_sprite.flip_h = false
+		_update_walk_animation(direction)
 
 	move_and_slide()
 
@@ -92,3 +88,21 @@ func change_state(new_state: State) -> void:
 			animated_sprite.play("idle")
 		State.WALK:
 			animated_sprite.play("walking")
+
+
+func _update_walk_animation(direction: Vector2) -> void:
+	var animation_name := "walking"
+
+	# Em diagonais, usa a animação do eixo dominante para evitar trocar
+	# de animação a cada frame.
+	if absf(direction.y) > absf(direction.x):
+		animation_name = "walking_up" if direction.y < 0.0 else "walking_down"
+		animated_sprite.flip_h = false
+	else:
+		if direction.x < 0.0:
+			animated_sprite.flip_h = true
+		elif direction.x > 0.0:
+			animated_sprite.flip_h = false
+
+	if animated_sprite.animation != animation_name:
+		animated_sprite.play(animation_name)
