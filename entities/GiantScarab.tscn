@@ -44,7 +44,6 @@ radius = 5.0
 height = 16.296295
 
 [node name="GiantScarab" type="CharacterBody2D" unique_id=630295986]
-z_index = 2
 scale = Vector2(1.35, 1.35)
 collision_layer = 2
 script = ExtResource("2_scarab")

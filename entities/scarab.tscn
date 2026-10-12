@@ -44,7 +44,6 @@ radius = 3.0
 height = 12.0
 
 [node name="Scarab" type="CharacterBody2D" unique_id=1281224450]
-z_index = 2
 collision_layer = 2
 script = ExtResource("1_scarab")
 
