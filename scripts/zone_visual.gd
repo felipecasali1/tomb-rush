@@ -2,7 +2,7 @@ extends Node2D
 class_name ZoneVisual
 
 var zone_position := Vector2.ZERO
-var radius := 54.0
+var radius := 50.0
 
 
 func set_zone(new_position: Vector2) -> void:

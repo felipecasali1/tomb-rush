@@ -9,10 +9,10 @@ const GIANT_SCARAB_SCENE: PackedScene = preload("res://entities/GiantScarab.tscn
 const GIANT_SCARAB_CHANCE := 0.18
 
 var zone_positions: Array[Vector2] = [
-	Vector2(144, 144),
-	Vector2(656, 144),
-	Vector2(144, 656),
-	Vector2(656, 656),
+	Vector2(80, 96),
+	Vector2(720, 96),
+	Vector2(80, 720),
+	Vector2(720, 720),
 ]
 
 var active_zone_index := -1
@@ -140,7 +140,7 @@ func _create_hud() -> void:
 	health_bar.show_percentage = false
 	health_bar.custom_minimum_size = Vector2(0, 24)
 	health_bar.add_theme_stylebox_override("background", _make_panel_style(Color(0.16, 0.04, 0.04, 1.0)))
-	health_bar.add_theme_stylebox_override("fill", _make_panel_style(Color(0.539, 0.033, 0.034, 1.0)))
+	health_bar.add_theme_stylebox_override("fill", _make_panel_style(Color(0.709, 0.059, 0.06, 1.0)))
 	health_margin.add_child(health_bar)
 
 	# Objetivo, progresso e dicas centralizados no topo.
@@ -151,7 +151,7 @@ func _create_hud() -> void:
 	top_panel.offset_right = 320
 	top_panel.offset_top = 18
 	top_panel.offset_bottom = 190
-	top_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.03, 0.02, 0.02, 0.78)))
+	top_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.03, 0.02, 0.02, 0.75)))
 	canvas_layer.add_child(top_panel)
 
 	var top_margin := MarginContainer.new()
@@ -167,7 +167,7 @@ func _create_hud() -> void:
 	top_margin.add_child(top_box)
 
 	var title := Label.new()
-	title.text = "TUMBA DOS ESCARAVELHOS"
+	title.text = "TOMB RUSH"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 22)
 	top_box.add_child(title)
