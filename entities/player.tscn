@@ -168,7 +168,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"walking_down",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -195,8 +195,17 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6nm46"]
-radius = 6.0
-height = 12.0
+radius = 4.0
+height = 14.0
+
+[sub_resource type="Gradient" id="Gradient_b0kkn"]
+offsets = PackedFloat32Array(0, 0.5060241)
+colors = PackedColorArray(1, 0.5411765, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ikrs5"]
+gradient = SubResource("Gradient_b0kkn")
+fill = 1
+fill_from = Vector2(0.5, 0.47391304)
 
 [node name="Player" type="CharacterBody2D" unique_id=2129055633]
 y_sort_enabled = true
@@ -205,12 +214,12 @@ script = ExtResource("1_b0kkn")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=233753887]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_ve0sw")
-animation = &"idle"
+animation = &"walking_down"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=871406386]
-position = Vector2(0, -6)
-rotation = -3.1415927
+position = Vector2(0, -4)
+rotation = -4.712389
 shape = SubResource("CapsuleShape2D_6nm46")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=292637242]
@@ -219,3 +228,7 @@ limit_left = 0
 limit_top = 0
 limit_right = 800
 limit_bottom = 800
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=702374462]
+position = Vector2(0, -5)
+texture = SubResource("GradientTexture2D_ikrs5")

@@ -4,6 +4,12 @@ const HOLD_TARGET := 60.0
 const ZONE_CHANGE_INTERVAL := 30.0
 const ZONE_RADIUS := 54.0
 const MAX_SCARABS := 100
+const GRID_SIZE := Vector2i(50, 50)
+const GRID_CELL_SIZE := 16.0
+const PATH_CLEARANCE := 2.0
+const SPAWN_MIN_DISTANCE := 180.0
+const SPAWN_CHECK_RADIUS := 8.0
+const SPAWN_EDGE_MARGIN := 3
 const SCARAB_SCENE: PackedScene = preload("res://entities/scarab.tscn")
 const GIANT_SCARAB_SCENE: PackedScene = preload("res://entities/GiantScarab.tscn")
 const GIANT_SCARAB_CHANCE := 0.18
@@ -20,6 +26,7 @@ var held_seconds := 0.0
 var zone_seconds := 0.0
 var scarab_spawn_seconds := 0.0
 var game_finished := false
+var path_grid: AStarGrid2D
 
 var objective_label: Label
 var progress_label: Label
@@ -45,6 +52,10 @@ func _ready() -> void:
 	player.health_changed.connect(_on_player_health_changed)
 	player.died.connect(_on_player_died)
 	_on_player_health_changed(player.health, player.max_health)
+	await get_tree().process_frame
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	path_grid = _build_path_grid()
 
 	for index in range(6):
 		_spawn_scarab(index == 0)
@@ -92,27 +103,110 @@ func _spawn_scarab(force_giant: bool = false) -> void:
 	scarab.add_to_group("scarabs")
 	scarab.target = player
 	scarab.position = _get_scarab_spawn_position()
+	scarab.set_path_grid(path_grid)
 	add_child(scarab)
 
 
+func _build_path_grid() -> AStarGrid2D:
+	var blocked_cells := 0
+	var grid := AStarGrid2D.new()
+	grid.region = Rect2i(Vector2i.ZERO, GRID_SIZE)
+	grid.cell_size = Vector2(GRID_CELL_SIZE, GRID_CELL_SIZE)
+	grid.offset = Vector2(GRID_CELL_SIZE * 0.5, GRID_CELL_SIZE * 0.5)
+	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	grid.update()
+
+	var query_shape := CircleShape2D.new()
+	query_shape.radius = PATH_CLEARANCE
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = query_shape
+	query.collision_mask = 1
+	query.collide_with_bodies = true
+	query.collide_with_areas = true
+	query.exclude = [player.get_rid()]
+	var space_state := get_world_2d().direct_space_state
+
+	for y in range(GRID_SIZE.y):
+		for x in range(GRID_SIZE.x):
+			var cell := Vector2i(x, y)
+			query.transform = Transform2D(0.0, grid.get_point_position(cell))
+			if not space_state.intersect_shape(query, 1).is_empty():
+				grid.set_point_solid(cell, true)
+				blocked_cells += 1
+	print("Células bloqueadas na grade: ", blocked_cells)
+	return grid
+
+
 func _get_scarab_spawn_position() -> Vector2:
-	var spawn_position := Vector2.ZERO
-	for _attempt in range(20):
+	if path_grid == null:
+		return Vector2(56.0, 56.0)
+
+	var region: Rect2i = path_grid.region
+	var min_x := region.position.x + SPAWN_EDGE_MARGIN
+	var max_x := region.position.x + region.size.x - SPAWN_EDGE_MARGIN - 1
+	var min_y := region.position.y + SPAWN_EDGE_MARGIN
+	var max_y := region.position.y + region.size.y - SPAWN_EDGE_MARGIN - 1
+
+	for _attempt in range(80):
 		var side := randi() % 4
+		var cell: Vector2i
 		match side:
 			0:
-				spawn_position = Vector2(randf_range(48.0, 752.0), 48.0)
+				cell = Vector2i(randi_range(min_x, max_x), min_y)
 			1:
-				spawn_position = Vector2(752.0, randf_range(48.0, 752.0))
+				cell = Vector2i(max_x, randi_range(min_y, max_y))
 			2:
-				spawn_position = Vector2(randf_range(48.0, 752.0), 752.0)
+				cell = Vector2i(randi_range(min_x, max_x), max_y)
 			_:
-				spawn_position = Vector2(48.0, randf_range(48.0, 752.0))
+				cell = Vector2i(min_x, randi_range(min_y, max_y))
 
-		if spawn_position.distance_to(player.position) > 180.0:
-			break
+		if path_grid.is_point_solid(cell):
+			continue
 
-	return spawn_position
+		var candidate := path_grid.get_point_position(cell)
+		if candidate.distance_to(player.global_position) < SPAWN_MIN_DISTANCE:
+			continue
+		if not _is_spawn_position_clear(candidate):
+			continue
+
+		return candidate
+
+	# Se nenhuma borda estiver livre, procura qualquer célula segura do mapa.
+	for y in range(region.position.y, region.position.y + region.size.y):
+		for x in range(region.position.x, region.position.x + region.size.x):
+			var cell := Vector2i(x, y)
+			if path_grid.is_point_solid(cell):
+				continue
+
+			var candidate := path_grid.get_point_position(cell)
+			if candidate.distance_to(player.global_position) < SPAWN_MIN_DISTANCE:
+				continue
+			if _is_spawn_position_clear(candidate):
+				return candidate
+
+	push_warning("Não foi encontrada uma posição segura para gerar o escaravelho.")
+	return Vector2(56.0, 56.0)
+
+
+func _is_spawn_position_clear(candidate: Vector2) -> bool:
+	var query_shape := CircleShape2D.new()
+	query_shape.radius = SPAWN_CHECK_RADIUS
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = query_shape
+	query.transform = Transform2D(0.0, candidate)
+	query.collision_mask = 1
+	query.collide_with_bodies = true
+	query.collide_with_areas = true
+	query.exclude = [player.get_rid()]
+
+	if not get_world_2d().direct_space_state.intersect_shape(query, 1).is_empty():
+		return false
+
+	for other in get_tree().get_nodes_in_group("scarabs"):
+		if is_instance_valid(other) and other.global_position.distance_to(candidate) < 24.0:
+			return false
+
+	return true
 
 
 func _create_hud() -> void:

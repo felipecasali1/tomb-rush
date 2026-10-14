@@ -46,6 +46,10 @@ height = 12.0
 [node name="Scarab" type="CharacterBody2D" unique_id=1281224450]
 collision_layer = 2
 script = ExtResource("1_scarab")
+speed_min = null
+speed_max = null
+attack_distance = null
+damage = null
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1485128316]
 position = Vector2(0, -6.5)
