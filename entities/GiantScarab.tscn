@@ -40,13 +40,12 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ikrs5"]
-radius = 5.0
-height = 16.296295
+radius = 3.7037034
+height = 13.333333
 
 [node name="GiantScarab" type="CharacterBody2D" unique_id=630295986]
 scale = Vector2(1.35, 1.35)
 collision_layer = 2
-collision_mask = 1
 script = ExtResource("2_scarab")
 speed_min = 34.0
 speed_max = 50.0
@@ -62,6 +61,6 @@ frame = 3
 frame_progress = 0.012015257
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1801215991]
-position = Vector2(0, -5.185185)
+position = Vector2(-0.7407407, -5.9259257)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_ikrs5")

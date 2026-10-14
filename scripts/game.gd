@@ -108,7 +108,6 @@ func _spawn_scarab(force_giant: bool = false) -> void:
 
 
 func _build_path_grid() -> AStarGrid2D:
-	var blocked_cells := 0
 	var grid := AStarGrid2D.new()
 	grid.region = Rect2i(Vector2i.ZERO, GRID_SIZE)
 	grid.cell_size = Vector2(GRID_CELL_SIZE, GRID_CELL_SIZE)
@@ -132,8 +131,6 @@ func _build_path_grid() -> AStarGrid2D:
 			query.transform = Transform2D(0.0, grid.get_point_position(cell))
 			if not space_state.intersect_shape(query, 1).is_empty():
 				grid.set_point_solid(cell, true)
-				blocked_cells += 1
-	print("Células bloqueadas na grade: ", blocked_cells)
 	return grid
 
 

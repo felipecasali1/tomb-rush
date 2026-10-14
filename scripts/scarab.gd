@@ -4,7 +4,7 @@ class_name Scarab
 const SPEED_MIN := 24.0
 const SPEED_MAX := 38.0
 const ATTACK_DISTANCE := 13.0
-const ATTACK_COOLDOWN := 0.75
+const ATTACK_COOLDOWN := 1.0
 const DAMAGE := 8
 const AVOIDANCE_TIME := 0.45
 const STUCK_TIME := 0.3

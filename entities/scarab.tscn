@@ -41,15 +41,11 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ext7o"]
 radius = 3.0
-height = 12.0
+height = 10.0
 
 [node name="Scarab" type="CharacterBody2D" unique_id=1281224450]
 collision_layer = 2
 script = ExtResource("1_scarab")
-speed_min = null
-speed_max = null
-attack_distance = null
-damage = null
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1485128316]
 position = Vector2(0, -6.5)
@@ -59,6 +55,6 @@ animation = &"walking"
 autoplay = "walking"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1607463932]
-position = Vector2(0, -3)
+position = Vector2(-1, -4)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_ext7o")
