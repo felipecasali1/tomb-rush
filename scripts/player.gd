@@ -5,6 +5,8 @@ const SPEED = 75.0
 const DEADZONE = 0.25
 const MAX_HEALTH := 100
 const INVULNERABILITY_TIME := 0.35
+const REGEN_DELAY := 3.0
+const REGEN_INTERVAL := 0.1
 
 signal health_changed(current: int, maximum: int)
 signal died
@@ -18,12 +20,14 @@ var current_state: State = State.IDLE
 var max_health := MAX_HEALTH
 var health := MAX_HEALTH
 var invulnerability_timer := 0.0
+var idle_timer := 0.0
+var regen_timer := 0.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 
-func _physics_process(_delta: float) -> void:
-	invulnerability_timer = maxf(invulnerability_timer - _delta, 0.0)
+func _physics_process(delta: float) -> void:
+	invulnerability_timer = maxf(invulnerability_timer - delta, 0.0)
 
 	# Teclado: WASD e setas
 	var keyboard_direction := Vector2(
@@ -58,11 +62,32 @@ func _physics_process(_delta: float) -> void:
 
 	if direction == Vector2.ZERO:
 		change_state(State.IDLE)
+		_regenerate_health(delta)
 	else:
+		idle_timer = 0.0
+		regen_timer = 0.0
 		change_state(State.WALK)
 		_update_walk_animation(direction)
 
 	move_and_slide()
+
+
+func _regenerate_health(delta: float) -> void:
+	if health <= 0:
+		return
+
+	var previous_idle_time := idle_timer
+	idle_timer = minf(idle_timer + delta, REGEN_DELAY)
+	if health >= max_health:
+		regen_timer = 0.0
+		return
+
+	# Conta apenas o tempo após os três segundos parado.
+	regen_timer += maxf(delta - (REGEN_DELAY - previous_idle_time), 0.0)
+	while regen_timer >= REGEN_INTERVAL and health < max_health:
+		regen_timer -= REGEN_INTERVAL
+		health += 1
+		health_changed.emit(health, max_health)
 
 
 func take_damage(amount: int) -> void:
@@ -71,6 +96,8 @@ func take_damage(amount: int) -> void:
 
 	health = maxi(health - amount, 0)
 	invulnerability_timer = INVULNERABILITY_TIME
+	idle_timer = 0.0
+	regen_timer = 0.0
 	health_changed.emit(health, max_health)
 
 	if health == 0:

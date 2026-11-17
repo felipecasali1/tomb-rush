@@ -199,11 +199,13 @@ radius = 4.0
 height = 14.0
 
 [sub_resource type="Gradient" id="Gradient_b0kkn"]
-offsets = PackedFloat32Array(0, 0.5060241)
+offsets = PackedFloat32Array(0, 0.67469877)
 colors = PackedColorArray(1, 0.5411765, 0, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ikrs5"]
 gradient = SubResource("Gradient_b0kkn")
+width = 128
+height = 128
 fill = 1
 fill_from = Vector2(0.5, 0.47391304)
 
