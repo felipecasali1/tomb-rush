@@ -792,5 +792,4 @@ position = Vector2(399, 401)
 texture = SubResource("GradientTexture2D_ve0sw")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=598264146]
-visible = false
-color = Color(0.05225108, 0.04588703, 0.04588727, 1)
+color = Color(0.23479435, 0.22876346, 0.2287632, 1)
